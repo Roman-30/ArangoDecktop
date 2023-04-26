@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="338.0" prefWidth="474.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vsu.csf.arangodbdecktop.controllers.CreateController">
+   <children>
+      <Button fx:id="testButton" layoutX="18.0" layoutY="298.0" mnemonicParsing="false" text="Create" />
+      <Button fx:id="canselButton" layoutX="399.0" layoutY="298.0" mnemonicParsing="false" text="Cansel" />
+      <Button fx:id="saveButton" layoutX="278.0" layoutY="298.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="101.0" text="Save" />
+      <TextField fx:id="userField" layoutX="96.0" layoutY="72.0" text="root" />
+      <TextField fx:id="passField" layoutX="96.0" layoutY="106.0" text="1234" />
+      <TextField fx:id="hostField" layoutX="96.0" layoutY="143.0" text="localhost" />
+      <TextField fx:id="portField" layoutX="96.0" layoutY="177.0" text="8529" />
+      <Label layoutX="25.0" layoutY="76.0" prefHeight="17.0" prefWidth="52.0" text="User" />
+      <Label layoutX="23.0" layoutY="110.0" prefHeight="17.0" prefWidth="65.0" text="Password" />
+      <Label layoutX="26.0" layoutY="147.0" text="Host" />
+      <Label layoutX="28.0" layoutY="181.0" text="Port" />
+      <Label fx:id="testLabel" layoutX="77.0" layoutY="302.0" prefHeight="17.0" prefWidth="121.0" text="Label" />
+      <TextField fx:id="nameField" layoutX="96.0" layoutY="36.0" />
+      <Label layoutX="23.0" layoutY="40.0" text="DB Name" />
+   </children>
+</AnchorPane>
