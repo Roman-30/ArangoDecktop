@@ -125,49 +125,51 @@ public class MainController {
         if (mouseEvent.getClickCount() == 2) {
             TreeItem<String> selectedItem = this.tree.getSelectionModel().getSelectedItem();
             String name = selectedItem == null ? null : selectedItem.getValue() ;
-            System.out.println("_________________");
-            System.out.println(name);
-            System.out.println("_________________");
             this.connection.setCollection(name);
             start1(this.connection);
         }
     }
 
+    public static String mapToString(Map<String, Map<String, Object>> map) {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Map<String, Object>> entry : map.entrySet()) {
+            for (Map.Entry<String, Object> item : entry.getValue().entrySet()) {
+                sb.append(item.getKey()).append(" ").append(item.getValue()).append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
     @FXML
     void initialize() {
-        //start();
 
         insertButton.setOnAction(e -> {
-            inputText.setText("INSERT { \"id\": @name, \"value\": @age } INTO @mycollection");
+            inputText.clear();
+            inputText.setText("INSERT { \\\"id\\\": @name, \\\"value\\\": @age } INTO @mycollection");
         });
 
         deleteButton.setOnAction(e -> {
-            DataConnection connection = new DataConnection(
-                "tes1",
-                "localhost",
-                8529,
-                "root",
-                "12345",
-                "test"
-            );
-
-            HttpService service = new HttpService();
-            service.getCollectionTree(connection);
-
+            inputText.clear();
+            inputText.setText("FOR my IN @mycollection REMOVE my IN @mycollection");
         });
 
         findButton.setOnAction(e -> {
-
+            inputText.clear();
+            inputText.setText("FOR my IN @mycollection RETURN my");
         });
 
         doingButton.setOnAction(e -> {
-            DataConnection connection = new DataConnection(
-                    "tes1", "localhost", 8529, "root", "12345"
-            );
-            String line = inputText.getText();
+            outputText.clear();
+            String line = inputText.getText().trim();
             HttpService service = new HttpService();
-            service.doingQuarry(new Quarry(connection, line));
-            outputText.setText("OK");
+            Map<String, Map<String, Object>> data = service.doingQuarry(new Quarry(this.connection, line));
+
+            if (data.size() == 0) {
+                outputText.setText("Выполнено!");
+            }
+            else {
+                outputText.setText(mapToString(data));
+            }
         });
 
         connectButton.setOnAction(e -> {

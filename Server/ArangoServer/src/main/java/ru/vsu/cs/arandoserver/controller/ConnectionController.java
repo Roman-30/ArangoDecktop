@@ -34,10 +34,8 @@ public class ConnectionController {
     }
 
     @PostMapping("/quarry")
-    public String doQuarry(@RequestBody Quarry quarry) {
-//        System.out.println(quarry);
-//        return service.doQuarry(quarry);
-        return "";
+    public Map<String, Map<String, Object>> doQuarry(@RequestBody Quarry quarry) {
+        return service.doQuarryRequest(quarry);
     }
 
     @PostMapping("/st")
@@ -47,7 +45,8 @@ public class ConnectionController {
 
     @PostMapping("/cf")
     public Map<String, Map<String, Object>> doSs(@RequestBody DataConnection connection) {
-        System.out.println(connection);
         return service.getCollectionData(connection);
     }
+
+
 }

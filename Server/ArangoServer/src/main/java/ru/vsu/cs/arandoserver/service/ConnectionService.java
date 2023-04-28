@@ -7,6 +7,7 @@ import com.arangodb.entity.BaseDocument;
 import org.springframework.stereotype.Service;
 import ru.vsu.cs.arandoserver.configuration.ArangoConnection;
 import ru.vsu.cs.arandoserver.entity.DataConnection;
+import ru.vsu.cs.arandoserver.entity.Quarry;
 
 import java.util.*;
 
@@ -23,13 +24,26 @@ public class ConnectionService {
         arangoDB.shutdown();
     }
 
-    public String doQuarryRequest(String quarry) {
-        if (quarry != null) {
-            return "OK";
+    public Map<String, Map<String, Object>> doQuarryRequest(Quarry quarry) {
+        Map<String, Map<String, Object>> data = new HashMap<>();
+        ArangoConnection ac = new ArangoConnection(quarry.getConnection());
+        ArangoCursor<BaseDocument> cursor;
+        String ads = quarry.getQuarry().trim().substring(0, 3).toLowerCase(Locale.ROOT);
+        if (ads.equals("for")) {
+            cursor = ac.getArangoDB().
+                    db(quarry.getConnection().getDbName()).
+                    query(quarry.getQuarry(), BaseDocument.class);
+            while (cursor.hasNext()) {
+                BaseDocument document = cursor.next();
+                data.put(document.getKey(), document.getProperties());
+            }
         } else {
-            return "Не ОК";
+            ac.getArangoDB().
+                    db(quarry.getConnection().getDbName()).
+                    query(quarry.getQuarry(), BaseDocument.class);
         }
 
+        return data;
     }
 
     public void createTable(DataConnection connection) {
@@ -57,12 +71,11 @@ public class ConnectionService {
 
     public Map<String, Map<String, Object>> getCollectionData(DataConnection connection) {
         Map<String, Map<String, Object>> colData = new HashMap<>();
-
         ArangoConnection ac = new ArangoConnection(connection);
         String query = "FOR d IN " + connection.getCollection() + " RETURN d";
         ArangoCursor<BaseDocument> cursor = ac.getArangoDB().
                 db(connection.getDbName()).
-                query(query,  BaseDocument.class);
+                query(query, BaseDocument.class);
 
         while (cursor.hasNext()) {
             BaseDocument document = cursor.next();
