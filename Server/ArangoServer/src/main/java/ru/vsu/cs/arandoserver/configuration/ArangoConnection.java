@@ -34,18 +34,5 @@ public class ArangoConnection {
                 .build();
     }
 
-
-//    public Map<String, List<String>> doSomething() {
-//        Map<String, List<String>> fileTree = new HashMap<>();
-//        for (var dbs : this.arangoDB.getDatabases()) {
-//            List<String> names = new ArrayList<>();
-//            for (var item : this.arangoDB.db(dbs).getCollections()) {
-//                names.add(item.getName());
-//            }
-//            fileTree.put(dbs, names);
-//        }
-//        return fileTree;
-//    }
-
 }
 

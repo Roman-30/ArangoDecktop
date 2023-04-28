@@ -106,6 +106,8 @@ public class ConnectController {
                 ex.printStackTrace();
             }
 
+            MainController sd = loader.getController();
+            sd.start(data);
             Parent root = loader.getRoot();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));

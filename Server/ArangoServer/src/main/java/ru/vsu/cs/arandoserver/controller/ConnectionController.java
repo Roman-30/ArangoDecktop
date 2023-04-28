@@ -1,7 +1,5 @@
 package ru.vsu.cs.arandoserver.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,5 +43,11 @@ public class ConnectionController {
     @PostMapping("/st")
     public Map<String, List<String>> doS(@RequestBody DataConnection connection) {
         return service.getFileNames(connection);
+    }
+
+    @PostMapping("/cf")
+    public Map<String, Map<String, Object>> doSs(@RequestBody DataConnection connection) {
+        System.out.println(connection);
+        return service.getCollectionData(connection);
     }
 }

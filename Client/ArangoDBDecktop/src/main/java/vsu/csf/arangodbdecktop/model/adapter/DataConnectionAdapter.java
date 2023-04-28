@@ -17,6 +17,7 @@ public class DataConnectionAdapter extends TypeAdapter<DataConnection> {
         out.name("port").value(value.getPort());
         out.name("userName").value(value.getUserName());
         out.name("password").value(value.getPassword());
+        out.name("collection").value(value.getCollection());
         out.endObject();
     }
 
@@ -28,6 +29,7 @@ public class DataConnectionAdapter extends TypeAdapter<DataConnection> {
         int port = 0;
         String username = null;
         String password = null;
+        String collection = null;
         while (in.hasNext()) {
             String name = in.nextName();
             switch (name) {
@@ -36,11 +38,12 @@ public class DataConnectionAdapter extends TypeAdapter<DataConnection> {
                 case "port" -> port = in.nextInt();
                 case "userName" -> username = in.nextString();
                 case "password" -> password = in.nextString();
+                case "collection" -> collection = in.nextString();
                 default -> in.skipValue();
             }
         }
         in.endObject();
-        return new DataConnection(dbName, host, port, username, password);
+        return new DataConnection(dbName, host, port, username, password, collection);
     }
 
 }

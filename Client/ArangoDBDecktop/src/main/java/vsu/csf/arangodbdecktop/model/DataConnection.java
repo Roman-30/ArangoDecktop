@@ -2,12 +2,14 @@ package vsu.csf.arangodbdecktop.model;
 
 import java.util.Objects;
 
+
 public class DataConnection {
     private String dbName;
     private String host;
     private Integer port;
     private String userName;
     private String password;
+    private String collection;
 
     public DataConnection(String dbName, String host, Integer port, String userName, String password) {
         this.dbName = dbName;
@@ -17,7 +19,20 @@ public class DataConnection {
         this.password = password;
     }
 
+    public DataConnection(String dbName, String host, Integer port, String userName, String password, String collection) {
+        this(dbName, host, port, userName, password);
+        this.collection = collection;
+    }
+
     public DataConnection() {
+    }
+
+    public String getCollection() {
+        return collection;
+    }
+
+    public void setCollection(String collection) {
+        this.collection = collection;
     }
 
     public String getDbName() {

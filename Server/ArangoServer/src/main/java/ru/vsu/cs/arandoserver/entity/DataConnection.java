@@ -15,4 +15,13 @@ public class DataConnection {
     private Integer port;
     private String userName;
     private String password;
+    private String collection;
+
+    public DataConnection(String dbName, String host, Integer port, String userName, String password) {
+        this.dbName = dbName;
+        this.host = host;
+        this.port = port;
+        this.userName = userName;
+        this.password = password;
+    }
 }

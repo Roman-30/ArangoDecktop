@@ -1,6 +1,7 @@
 package vsu.csf.arangodbdecktop.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.bigtable.repackaged.com.google.gson.Gson;
 import com.google.bigtable.repackaged.com.google.gson.GsonBuilder;
@@ -215,6 +216,85 @@ public class HttpService {
 //        }
 
         return jsonToMap(object);
+
+    }
+
+    public Map<String, Map<String, Object>> getCollectionTree(DataConnection quarry) {
+        Gson gson = new GsonBuilder().registerTypeAdapter(DataConnection.class, new DataConnectionAdapter()).create();
+        String json = gson.toJson(quarry);
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpPost post = new HttpPost(SERVER_URL + "/cf");
+
+        post.setHeader("Content-type", "application/json");
+
+        StringEntity entity;
+
+        try {
+            entity = new StringEntity(json);
+
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        post.setEntity(entity);
+
+        HttpResponse response;
+
+        try {
+            response = client.execute(post);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        InputStream stream = null;
+        try {
+            stream = response.getEntity().getContent();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        StringBuilder content = new StringBuilder();
+        try {
+            BufferedReader bf = new BufferedReader(new InputStreamReader(stream));
+            String line;
+
+            while ((line = bf.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+            bf.close();
+        } catch (Exception e) {
+            System.out.println("Ошибка");
+        }
+
+//        JSONObject obj = new JSONObject(geoPos.substring(1, geoPos.length()-2));
+        JSONObject object = new JSONObject(content.toString());
+        System.out.println();
+//        var csd = jsonToMap(object);
+//
+//        for (Map.Entry<String, Object> entry: csd.entrySet()) {
+//
+//            System.out.println(entry.getKey() + " " + entry.getValue());
+//        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        TypeReference<Map<String, Map<String, Object>>> typeReference =
+                new TypeReference<>() {
+                };
+        Map<String, Map<String, Object>> map;
+        try {
+            map = objectMapper.readValue(content.toString(), typeReference);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        for (Map.Entry<String, Map<String, Object>> entry : map.entrySet()) {
+            for (Map.Entry<String, Object> entry1 : entry.getValue().entrySet()) {
+                System.out.println(entry.getKey() + " " + entry1.getKey() + " " + entry1.getValue());
+            }
+        }
+
+        return map;
 
     }
 

@@ -1,15 +1,12 @@
 package ru.vsu.cs.arandoserver.service;
 
-import com.arangodb.ArangoCollection;
+import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDBException;
-import com.arangodb.entity.CollectionEntity;
-import com.arangodb.entity.CollectionPropertiesEntity;
+import com.arangodb.entity.BaseDocument;
 import org.springframework.stereotype.Service;
 import ru.vsu.cs.arandoserver.configuration.ArangoConnection;
 import ru.vsu.cs.arandoserver.entity.DataConnection;
-import ru.vsu.cs.arandoserver.entity.Quarry;
-import ru.vsu.cs.arandoserver.repository.ArangoRepositor;
 
 import java.util.*;
 
@@ -21,7 +18,7 @@ public class ConnectionService {
         ArangoConnection ac = new ArangoConnection(connection);
         return ac.getArangoDB().db(connection.getDbName()).getVersion().getVersion() != null;
     }
-    
+
     public void close(ArangoDB arangoDB) {
         arangoDB.shutdown();
     }
@@ -56,5 +53,22 @@ public class ConnectionService {
         fileTree.put(connection.getDbName(), names);
 
         return fileTree;
+    }
+
+    public Map<String, Map<String, Object>> getCollectionData(DataConnection connection) {
+        Map<String, Map<String, Object>> colData = new HashMap<>();
+
+        ArangoConnection ac = new ArangoConnection(connection);
+        String query = "FOR d IN " + connection.getCollection() + " RETURN d";
+        ArangoCursor<BaseDocument> cursor = ac.getArangoDB().
+                db(connection.getDbName()).
+                query(query,  BaseDocument.class);
+
+        while (cursor.hasNext()) {
+            BaseDocument document = cursor.next();
+            colData.put(document.getKey(), document.getProperties());
+        }
+
+        return colData;
     }
 }
