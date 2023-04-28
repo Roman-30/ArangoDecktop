@@ -32,17 +32,18 @@ public class ConnectionController {
 
     @PostMapping("/check")
     public void checkConnectionTable(@RequestBody DataConnection connection) {
-        service.isConnected(connection);
+        service.testConnection(connection);
     }
 
     @PostMapping("/quarry")
     public String doQuarry(@RequestBody Quarry quarry) {
-        System.out.println(quarry);
-        return service.doQuarry(quarry);
+//        System.out.println(quarry);
+//        return service.doQuarry(quarry);
+        return "";
     }
 
     @PostMapping("/st")
     public Map<String, List<String>> doS(@RequestBody DataConnection connection) {
-        return service.doSomething(connection);
+        return service.getFileNames(connection);
     }
 }

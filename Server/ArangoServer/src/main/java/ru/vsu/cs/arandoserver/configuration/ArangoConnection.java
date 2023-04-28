@@ -3,15 +3,20 @@ package ru.vsu.cs.arandoserver.configuration;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDBException;
 import com.arangodb.entity.CollectionEntity;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.vsu.cs.arandoserver.entity.DataConnection;
 
 import java.util.*;
 import java.util.List;
 
-
+@Getter
+@NoArgsConstructor
+@Setter
 public class ArangoConnection {
 
-    private final ArangoDB arangoDB;
+    private ArangoDB arangoDB;
 
     public ArangoConnection(String host, int port, String username, String password) {
         this.arangoDB = new ArangoDB.Builder()
@@ -29,41 +34,18 @@ public class ArangoConnection {
                 .build();
     }
 
-    public boolean testConnection(String databaseName) throws ArangoDBException {
-        return this.arangoDB.db(databaseName).getVersion().getVersion() != null;
-    }
 
-    public void create(String databaseName) throws ArangoDBException {
-        this.arangoDB.createDatabase(databaseName);
-    }
+//    public Map<String, List<String>> doSomething() {
+//        Map<String, List<String>> fileTree = new HashMap<>();
+//        for (var dbs : this.arangoDB.getDatabases()) {
+//            List<String> names = new ArrayList<>();
+//            for (var item : this.arangoDB.db(dbs).getCollections()) {
+//                names.add(item.getName());
+//            }
+//            fileTree.put(dbs, names);
+//        }
+//        return fileTree;
+//    }
 
-    public boolean delete(String databaseName) throws ArangoDBException {
-        return this.arangoDB.db(databaseName).drop();
-    }
-
-    public void close() {
-        this.arangoDB.shutdown();
-    }
-
-    public String doQuarryRequest(String quarry) {
-        if (quarry != null) {
-            return "OK";
-        } else {
-          return "Не ОК";
-        }
-
-    }
-
-    public Map<String, List<String>> doSomething() {
-        Map<String, List<String>> fileTree = new HashMap<>();
-        for (var dbs : this.arangoDB.getDatabases()) {
-            List<String> names = new ArrayList<>();
-            for (var item : this.arangoDB.db(dbs).getCollections()) {
-                names.add(item.getName());
-            }
-            fileTree.put(dbs, names);
-        }
-        return fileTree;
-    }
 }
 
