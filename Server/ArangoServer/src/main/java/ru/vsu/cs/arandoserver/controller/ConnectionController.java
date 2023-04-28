@@ -43,7 +43,6 @@ public class ConnectionController {
 
     @PostMapping("/st")
     public Map<String, List<String>> doS(@RequestBody DataConnection connection) {
-        System.out.println(connection);
         return service.doSomething(connection);
     }
 }

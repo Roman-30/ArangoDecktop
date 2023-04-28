@@ -55,21 +55,14 @@ public class ArangoConnection {
     }
 
     public Map<String, List<String>> doSomething() {
-        Collection<CollectionEntity> s = this.arangoDB.db("tes1").getCollections();
         Map<String, List<String>> fileTree = new HashMap<>();
-
         for (var dbs : this.arangoDB.getDatabases()) {
             List<String> names = new ArrayList<>();
-            System.out.println("Db name: " + dbs);
             for (var item : this.arangoDB.db(dbs).getCollections()) {
                 names.add(item.getName());
-                System.out.println("Collection: " + item.getName());
             }
             fileTree.put(dbs, names);
         }
-
-
-        System.out.println(this.arangoDB.db("tes1").collection("test").getProperties().getName());
         return fileTree;
     }
 }
