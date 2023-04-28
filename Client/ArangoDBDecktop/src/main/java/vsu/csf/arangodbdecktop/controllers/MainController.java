@@ -5,27 +5,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import vsu.csf.arangodbdecktop.ClientApplication;
 import vsu.csf.arangodbdecktop.model.DataConnection;
 import vsu.csf.arangodbdecktop.model.Quarry;
+import vsu.csf.arangodbdecktop.model.ResultModel;
 import vsu.csf.arangodbdecktop.service.HttpService;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.TreeView;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
-
-import java.io.File;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class MainController {
@@ -37,8 +30,6 @@ public class MainController {
 
     @FXML
     private URL location;
-
-
     @FXML
     private AnchorPane left;
 
@@ -68,6 +59,8 @@ public class MainController {
     @FXML
     private Button doingButton;
 
+    @FXML
+    private TableView<ResultModel> resTable;
 
     @FXML
     private TreeView<String> collectionTree = new TreeView<>(new TreeItem<>());
@@ -164,12 +157,28 @@ public class MainController {
             HttpService service = new HttpService();
             Map<String, Map<String, Object>> data = service.doingQuarry(new Quarry(this.connection, line));
 
-            if (data.size() == 0) {
-                outputText.setText("Выполнено!");
+
+            this.resTable.getColumns().clear();
+            this.resTable.getItems().clear();
+
+            if (data.size() != 0) {
+                TableColumn<ResultModel, Object> argv1 = new TableColumn<>();
+                TableColumn<ResultModel, Object> argv2 = new TableColumn<>();
+                argv1.setCellValueFactory(new PropertyValueFactory<>("argv1"));
+                argv2.setCellValueFactory(new PropertyValueFactory<>("argv2"));
+                this.resTable.getColumns().add(argv1);
+                this.resTable.getColumns().add(argv2);
+
+                for (Map.Entry<String, Map<String, Object>> entry : data.entrySet()) {
+                    for (Map.Entry<String, Object> item : entry.getValue().entrySet()) {
+                        this.resTable.getItems().add(new ResultModel(item.getKey(), item.getValue()));
+                    }
+                }
             }
-            else {
-                outputText.setText(mapToString(data));
-            }
+
+            outputText.clear();
+            outputText.setText("Completed successfully!");
+
         });
 
         connectButton.setOnAction(e -> {

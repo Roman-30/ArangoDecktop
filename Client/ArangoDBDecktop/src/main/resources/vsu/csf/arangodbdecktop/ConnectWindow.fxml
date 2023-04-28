@@ -5,13 +5,13 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="325.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vsu.csf.arangodbdecktop.controllers.ConnectController">
+<AnchorPane maxHeight="325.0" maxWidth="600.0" minHeight="325.0" minWidth="600.0" prefHeight="325.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vsu.csf.arangodbdecktop.controllers.ConnectController">
    <children>
       <Button fx:id="createButton" layoutX="210.0" layoutY="276.0" mnemonicParsing="false" text="Create" />
       <Button fx:id="editButton" layoutX="270.0" layoutY="276.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="59.0" text="edit" />
       <Button fx:id="removeButton" layoutX="339.0" layoutY="276.0" mnemonicParsing="false" text="Remove" />
       <Button fx:id="canselButton" layoutX="532.0" layoutY="276.0" mnemonicParsing="false" text="Cansel" AnchorPane.bottomAnchor="23.666666666666668" AnchorPane.leftAnchor="532.0" AnchorPane.rightAnchor="17.333333333333336" AnchorPane.topAnchor="276.0" />
-      <TableView fx:id="table" onMouseClicked="#selectContractContractTab" layoutX="14.0" layoutY="14.0" prefHeight="249.0" prefWidth="572.0">
+      <TableView fx:id="table" layoutX="14.0" layoutY="14.0" onMouseClicked="#selectContractContractTab" prefHeight="249.0" prefWidth="572.0">
         <columns>
             <TableColumn fx:id="dbName" maxWidth="143.0" minWidth="143.0" prefWidth="133.99996948242188" text="Db name" />
             <TableColumn fx:id="userName" maxWidth="143.0" minWidth="143.0" prefWidth="86.66668701171875" text="User name" />

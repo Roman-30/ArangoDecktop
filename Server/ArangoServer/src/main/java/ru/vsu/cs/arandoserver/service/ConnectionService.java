@@ -26,6 +26,7 @@ public class ConnectionService {
 
     public Map<String, Map<String, Object>> doQuarryRequest(Quarry quarry) {
         Map<String, Map<String, Object>> data = new HashMap<>();
+        BaseDocument document;
         ArangoConnection ac = new ArangoConnection(quarry.getConnection());
         ArangoCursor<BaseDocument> cursor;
         String ads = quarry.getQuarry().trim().substring(0, 3).toLowerCase(Locale.ROOT);
@@ -34,8 +35,9 @@ public class ConnectionService {
                     db(quarry.getConnection().getDbName()).
                     query(quarry.getQuarry(), BaseDocument.class);
             while (cursor.hasNext()) {
-                BaseDocument document = cursor.next();
-                data.put(document.getKey(), document.getProperties());
+                if ((document = cursor.next()) != null) {
+                    data.put(document.getKey(), document.getProperties());
+                }
             }
         } else {
             ac.getArangoDB().

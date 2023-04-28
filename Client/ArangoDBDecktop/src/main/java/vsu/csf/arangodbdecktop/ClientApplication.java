@@ -14,8 +14,9 @@ public class ClientApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(ClientApplication.class.getResource("ConnectWindow.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 325);
-        stage.setTitle("Hello!");
+        stage.setTitle("Connection");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
 
     }

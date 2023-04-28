@@ -65,17 +65,18 @@ public class EditController {
         Parent root = loader.getRoot();
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
+        stage.setResizable(false);
         stage.show();
     }
 
     public void setValue(DataConnection data) {
-
-        this.hostField.setText(data.getHost());
-        this.nameField.setText(data.getDbName());
-        this.portField.setText(String.valueOf(data.getPort()));
-        this.passField.setText(data.getPassword());
-        this.userField.setText(data.getUserName());
-
+        if (data != null) {
+            this.hostField.setText(data.getHost());
+            this.nameField.setText(data.getDbName());
+            this.portField.setText(String.valueOf(data.getPort()));
+            this.passField.setText(data.getPassword());
+            this.userField.setText(data.getUserName());
+        }
     }
 
     @FXML

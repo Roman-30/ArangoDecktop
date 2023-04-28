@@ -40,6 +40,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -113,7 +114,8 @@
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                            <children>
-                              <TextArea fx:id="outputText" layoutX="4.0" prefHeight="279.0" prefWidth="479.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="2.0" />
+                              <TextArea fx:id="outputText" layoutX="4.0" prefHeight="279.0" prefWidth="265.0" AnchorPane.bottomAnchor="5.333333333333371" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="291.3333333333333" AnchorPane.topAnchor="2.0" />
+                              <TableView fx:id="resTable" layoutX="265.0" layoutY="3.0" prefHeight="277.0" prefWidth="287.0" AnchorPane.bottomAnchor="6.333333333333371" AnchorPane.leftAnchor="265.0" AnchorPane.rightAnchor="4.333333333333314" AnchorPane.topAnchor="3.0" />
                            </children>
                         </AnchorPane>
                     </items>
