@@ -2,8 +2,11 @@ package ru.vsu.cs.arandoserver.configuration;
 
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDBException;
+import com.arangodb.entity.CollectionEntity;
 import ru.vsu.cs.arandoserver.entity.DataConnection;
-import ru.vsu.cs.arandoserver.entity.Quarry;
+
+import java.util.*;
+import java.util.List;
 
 
 public class ArangoConnection {
@@ -42,12 +45,32 @@ public class ArangoConnection {
         this.arangoDB.shutdown();
     }
 
-    public String doQuarryRequest(Quarry quarry) {
+    public String doQuarryRequest(String quarry) {
         if (quarry != null) {
             return "OK";
         } else {
-          return "ХУЙ";
+          return "Не ОК";
         }
+
+    }
+
+    public Map<String, List<String>> doSomething() {
+        Collection<CollectionEntity> s = this.arangoDB.db("tes1").getCollections();
+        Map<String, List<String>> fileTree = new HashMap<>();
+
+        for (var dbs : this.arangoDB.getDatabases()) {
+            List<String> names = new ArrayList<>();
+            System.out.println("Db name: " + dbs);
+            for (var item : this.arangoDB.db(dbs).getCollections()) {
+                names.add(item.getName());
+                System.out.println("Collection: " + item.getName());
+            }
+            fileTree.put(dbs, names);
+        }
+
+
+        System.out.println(this.arangoDB.db("tes1").collection("test").getProperties().getName());
+        return fileTree;
     }
 }
 

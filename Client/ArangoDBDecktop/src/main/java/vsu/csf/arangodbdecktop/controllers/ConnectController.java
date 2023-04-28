@@ -7,7 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import vsu.csf.arangodbdecktop.HelloApplication;
+import vsu.csf.arangodbdecktop.ClientApplication;
+import vsu.csf.arangodbdecktop.model.DataConnection;
 import vsu.csf.arangodbdecktop.service.FileService;
 import vsu.csf.arangodbdecktop.service.HttpService;
 
@@ -74,7 +75,7 @@ public class ConnectController {
 
     private void reloadWindow(String window) {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(HelloApplication.class.getResource(window));
+        loader.setLocation(ClientApplication.class.getResource(window));
 
         try {
             loader.load();
@@ -141,7 +142,7 @@ public class ConnectController {
             editButton.getScene().getWindow().hide();
             DataConnection selectedData = table.getSelectionModel().getSelectedItem();
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(HelloApplication.class.getResource("EditWindow.fxml"));
+            loader.setLocation(ClientApplication.class.getResource("EditWindow.fxml"));
 
             try {
                 if (Objects.equals(selectedData, new DataConnection())) {
@@ -166,7 +167,7 @@ public class ConnectController {
         createButton.setOnAction(e -> {
             createButton.getScene().getWindow().hide();
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(HelloApplication.class.getResource("CreateWindow.fxml"));
+            loader.setLocation(ClientApplication.class.getResource("CreateWindow.fxml"));
 
             try {
                 loader.load();
@@ -184,7 +185,7 @@ public class ConnectController {
             canselButton.getScene().getWindow().hide();
 
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(HelloApplication.class.getResource("ArangoDBConstructor.fxml"));
+            loader.setLocation(ClientApplication.class.getResource("ArangoDBConstructor.fxml"));
 
             try {
                 loader.load();

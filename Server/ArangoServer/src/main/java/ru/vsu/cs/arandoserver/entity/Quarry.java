@@ -2,13 +2,21 @@ package ru.vsu.cs.arandoserver.entity;
 
 public class Quarry {
 
+    private DataConnection connection;
+
     private String quarry;
 
-    public Quarry(String quarry) {
+    public Quarry(DataConnection connection, String quarry) {
+        this.connection = connection;
         this.quarry = quarry;
     }
 
-    public Quarry() {
+    public DataConnection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(DataConnection connection) {
+        this.connection = connection;
     }
 
     public String getQuarry() {

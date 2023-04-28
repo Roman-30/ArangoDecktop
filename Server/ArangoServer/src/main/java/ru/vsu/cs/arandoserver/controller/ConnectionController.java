@@ -9,6 +9,9 @@ import ru.vsu.cs.arandoserver.entity.DataConnection;
 import ru.vsu.cs.arandoserver.entity.Quarry;
 import ru.vsu.cs.arandoserver.service.ConnectionService;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 public class ConnectionController {
     private final ConnectionService service;
@@ -33,9 +36,14 @@ public class ConnectionController {
     }
 
     @PostMapping("/quarry")
-    public void doQuarry(@RequestBody DataConnection connection, @RequestBody Quarry quarry) {
+    public String doQuarry(@RequestBody Quarry quarry) {
         System.out.println(quarry);
-        System.out.println(connection);
+        return service.doQuarry(quarry);
+    }
 
+    @PostMapping("/st")
+    public Map<String, List<String>> doS(@RequestBody DataConnection connection) {
+        System.out.println(connection);
+        return service.doSomething(connection);
     }
 }

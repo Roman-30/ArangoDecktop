@@ -1,13 +1,13 @@
 package vsu.csf.arangodbdecktop.service;
 
-import vsu.csf.arangodbdecktop.controllers.DataConnection;
+import vsu.csf.arangodbdecktop.model.DataConnection;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileService {
-    private static final String FILE_PATH = "src\\main\\java\\vsu\\csf\\arangodbdecktop\\file\\connection_data.txt";
+    private static final String FILE_PATH = "C:\\Users\\romse\\OneDrive\\Документы\\GitHub\\ArangoDecktop\\Client\\ArangoDBDecktop\\src\\main\\java\\vsu\\csf\\arangodbdecktop\\file\\connection_data.txt";
 
     public static void writeConnection(List<DataConnection> dataConnections) {
         try (FileWriter writer = new FileWriter(FILE_PATH)) {

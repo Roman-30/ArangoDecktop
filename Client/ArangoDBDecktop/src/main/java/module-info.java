@@ -14,9 +14,14 @@ module vsu.csf.arangodbdecktop {
     requires okhttp3;
     requires org.apache.httpcomponents.httpclient;
     requires org.apache.httpcomponents.httpcore;
+    requires org.json;
 
     opens vsu.csf.arangodbdecktop to javafx.fxml;
     exports vsu.csf.arangodbdecktop;
     exports vsu.csf.arangodbdecktop.controllers;
     opens vsu.csf.arangodbdecktop.controllers to javafx.fxml;
+    exports vsu.csf.arangodbdecktop.model;
+    opens vsu.csf.arangodbdecktop.model to javafx.fxml;
+    exports vsu.csf.arangodbdecktop.model.adapter;
+    opens vsu.csf.arangodbdecktop.model.adapter to javafx.fxml;
 }

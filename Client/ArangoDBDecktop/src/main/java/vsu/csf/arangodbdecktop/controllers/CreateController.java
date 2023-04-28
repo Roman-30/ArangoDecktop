@@ -9,7 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import vsu.csf.arangodbdecktop.HelloApplication;
+import vsu.csf.arangodbdecktop.ClientApplication;
+import vsu.csf.arangodbdecktop.model.DataConnection;
 import vsu.csf.arangodbdecktop.service.FileService;
 import vsu.csf.arangodbdecktop.service.HttpService;
 
@@ -105,7 +106,7 @@ public class CreateController {
             canselButton.getScene().getWindow().hide();
 
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(HelloApplication.class.getResource("ConnectWindow.fxml"));
+            loader.setLocation(ClientApplication.class.getResource("ConnectWindow.fxml"));
 
             try {
                 loader.load();

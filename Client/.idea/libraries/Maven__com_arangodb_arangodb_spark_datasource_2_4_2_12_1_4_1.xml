@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.arangodb:arangodb-spark-datasource-2.4_2.12:1.4.1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/arangodb/arangodb-spark-datasource-2.4_2.12/1.4.1/arangodb-spark-datasource-2.4_2.12-1.4.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/arangodb/arangodb-spark-datasource-2.4_2.12/1.4.1/arangodb-spark-datasource-2.4_2.12-1.4.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/arangodb/arangodb-spark-datasource-2.4_2.12/1.4.1/arangodb-spark-datasource-2.4_2.12-1.4.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
