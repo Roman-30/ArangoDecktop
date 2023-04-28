@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import vsu.csf.arangodbdecktop.ClientApplication;
 import vsu.csf.arangodbdecktop.model.DataConnection;
@@ -66,10 +67,10 @@ public class ConnectController {
 
     private void create() {
 
-            dbName.setCellValueFactory(new PropertyValueFactory<>("dbName"));
-            userName.setCellValueFactory(new PropertyValueFactory<>("userName"));
-            host.setCellValueFactory(new PropertyValueFactory<>("host"));
-            port.setCellValueFactory(new PropertyValueFactory<>("port"));
+        dbName.setCellValueFactory(new PropertyValueFactory<>("dbName"));
+        userName.setCellValueFactory(new PropertyValueFactory<>("userName"));
+        host.setCellValueFactory(new PropertyValueFactory<>("host"));
+        port.setCellValueFactory(new PropertyValueFactory<>("port"));
 
     }
 
@@ -89,12 +90,37 @@ public class ConnectController {
         stage.show();
     }
 
+    public void selectContractContractTab(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount() == 2) {
+            var data = table.getSelectionModel().getSelectedItem();
+            System.out.println(data);
+
+            canselButton.getScene().getWindow().hide();
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(ClientApplication.class.getResource("ArangoDBConstructor.fxml"));
+
+            try {
+                loader.load();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            Parent root = loader.getRoot();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+
+            stage.show();
+        }
+    }
+
     @FXML
     void initialize() {
         create();
 
         connections = FileService.readConnection();
         table.getItems().addAll(connections);
+
 
         removeButton.setOnAction(e -> {
             DataConnection selectedData = table.getSelectionModel().getSelectedItem();

@@ -70,7 +70,7 @@ public class MainController {
 
     public void start() {
         DataConnection connection = new DataConnection(
-                "test",
+                "tes1",
                 "localhost",
                 8529,
                 "root",
