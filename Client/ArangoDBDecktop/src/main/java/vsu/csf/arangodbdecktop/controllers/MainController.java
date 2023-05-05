@@ -1,5 +1,7 @@
 package vsu.csf.arangodbdecktop.controllers;
 
+import com.arangodb.ArangoCollection;
+import com.arangodb.entity.IndexEntity;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,11 +14,13 @@ import javafx.stage.Stage;
 import vsu.csf.arangodbdecktop.ClientApplication;
 import vsu.csf.arangodbdecktop.model.DataConnection;
 import vsu.csf.arangodbdecktop.model.Quarry;
+import vsu.csf.arangodbdecktop.model.QueryPatterns;
 import vsu.csf.arangodbdecktop.model.ResultModel;
 import vsu.csf.arangodbdecktop.service.HttpService;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -79,19 +83,41 @@ public class MainController {
 
     }
 
-    public void start1(DataConnection connection) {
+    public void start1(String name) {
         HttpService service = new HttpService();
-        Map<String, Map<String, Object>> data = service.getCollectionTree(connection);
-
-        TreeItem<String> rootNode = new TreeItem<>(connection.getCollection() + " data");
-        rootNode.setExpanded(true);
-        populateTree1(data, rootNode);
-
-        this.collectionTree.setRoot(rootNode);
-
+        String queryRequest = String.format(QueryPatterns.FIND_ALL, name);
+        showResult(service, queryRequest);
+        inputText.setText(queryRequest);
+        outputText.setText("Completed successfully!");
     }
 
-    private void populateTree1( Map<String, Map<String, Object>> data, TreeItem<String> parent) {
+    private void showResult(HttpService service, String queryRequest) {
+        Map<String, Map<String, Object>> data = service.doingQuarry(
+                new Quarry(this.connection, queryRequest));
+
+
+        this.resTable.getColumns().clear();
+        this.resTable.getItems().clear();
+
+        if (data.size() != 0) {
+            TableColumn<ResultModel, Object> argv1 = new TableColumn<>();
+            TableColumn<ResultModel, Object> argv2 = new TableColumn<>();
+            argv1.setCellValueFactory(new PropertyValueFactory<>("argv1"));
+            argv2.setCellValueFactory(new PropertyValueFactory<>("argv2"));
+            this.resTable.getColumns().add(argv1);
+            this.resTable.getColumns().add(argv2);
+
+            for (Map.Entry<String, Map<String, Object>> entry : data.entrySet()) {
+                for (Map.Entry<String, Object> item : entry.getValue().entrySet()) {
+                    this.resTable.getItems().add(new ResultModel(item.getKey(), item.getValue()));
+                }
+            }
+        }
+
+        outputText.clear();
+    }
+
+    private void populateTree1(Map<String, Map<String, Object>> data, TreeItem<String> parent) {
         for (Map.Entry<String, Map<String, Object>> entry : data.entrySet()) {
             TreeItem<String> item = new TreeItem<>(entry.getKey());
             parent.getChildren().add(item);
@@ -109,7 +135,20 @@ public class MainController {
             parent.getChildren().add(item);
 
             for (Object name : entry.getValue()) {
-                item.getChildren().add(new TreeItem<>(String.valueOf(name)));
+                TreeItem<String> item1 = new TreeItem<>();
+                TreeItem<String> item2 = new TreeItem<>("indexes");
+                if (name instanceof Map<?, ?> map) {
+                    if (map.get("info") instanceof Map<?, ?> map1) {
+                        item1.setValue(String.valueOf(map1.get("name")));
+                        item1.getChildren().add(item2);
+                    }
+                    if (map.get("indexes") instanceof List<?> list)
+                        for (Object i : list)
+                            if (i instanceof Map<?, ?> map1)
+                                item2.getChildren().add(new TreeItem<>(
+                                        String.valueOf(map1.get("name"))));
+                    item.getChildren().add(item1);
+                }
             }
         }
     }
@@ -117,9 +156,12 @@ public class MainController {
     public void selectCollection(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() == 2) {
             TreeItem<String> selectedItem = this.tree.getSelectionModel().getSelectedItem();
-            String name = selectedItem == null ? null : selectedItem.getValue() ;
-            this.connection.setCollection(name);
-            start1(this.connection);
+            String name = selectedItem == null ? null : selectedItem.getValue();
+
+            if (name != null) {
+                this.connection.setCollection(name);
+                start1(name);
+            }
         }
     }
 
@@ -154,29 +196,9 @@ public class MainController {
         doingButton.setOnAction(e -> {
             outputText.clear();
             String line = inputText.getText().trim();
+
             HttpService service = new HttpService();
-            Map<String, Map<String, Object>> data = service.doingQuarry(new Quarry(this.connection, line));
-
-
-            this.resTable.getColumns().clear();
-            this.resTable.getItems().clear();
-
-            if (data.size() != 0) {
-                TableColumn<ResultModel, Object> argv1 = new TableColumn<>();
-                TableColumn<ResultModel, Object> argv2 = new TableColumn<>();
-                argv1.setCellValueFactory(new PropertyValueFactory<>("argv1"));
-                argv2.setCellValueFactory(new PropertyValueFactory<>("argv2"));
-                this.resTable.getColumns().add(argv1);
-                this.resTable.getColumns().add(argv2);
-
-                for (Map.Entry<String, Map<String, Object>> entry : data.entrySet()) {
-                    for (Map.Entry<String, Object> item : entry.getValue().entrySet()) {
-                        this.resTable.getItems().add(new ResultModel(item.getKey(), item.getValue()));
-                    }
-                }
-            }
-
-            outputText.clear();
+            showResult(service, line);
             outputText.setText("Completed successfully!");
 
         });

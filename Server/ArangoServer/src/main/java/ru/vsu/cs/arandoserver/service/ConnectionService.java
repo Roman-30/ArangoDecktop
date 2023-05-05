@@ -1,9 +1,11 @@
 package ru.vsu.cs.arandoserver.service;
 
+import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDBException;
 import com.arangodb.entity.BaseDocument;
+import com.arangodb.entity.IndexEntity;
 import org.springframework.stereotype.Service;
 import ru.vsu.cs.arandoserver.configuration.ArangoConnection;
 import ru.vsu.cs.arandoserver.entity.DataConnection;
@@ -61,10 +63,30 @@ public class ConnectionService {
     public Map<String, List<String>> getFileNames(DataConnection connection) {
         ArangoConnection ac = new ArangoConnection(connection);
 
+        for (IndexEntity i : ac.getArangoDB().db(connection.getDbName()).collection("test").getIndexes()) {
+            System.out.println(i.getName());
+        }
+
+        ArangoCollection sd =  ac.getArangoDB().db(connection.getDbName()).collection("test");
+
         Map<String, List<String>> fileTree = new HashMap<>();
         List<String> names = new ArrayList<>();
         for (var item : ac.getArangoDB().db(connection.getDbName()).getCollections()) {
             names.add(item.getName());
+
+        }
+        fileTree.put(connection.getDbName(), names);
+
+        return fileTree;
+    }
+
+    public Map<String, List<ArangoCollection>> getFileNames1(DataConnection connection) {
+        ArangoConnection ac = new ArangoConnection(connection);
+
+        Map<String, List<ArangoCollection>> fileTree = new HashMap<>();
+        List<ArangoCollection> names = new ArrayList<>();
+        for (var item : ac.getArangoDB().db(connection.getDbName()).getCollections()) {
+            names.add(ac.getArangoDB().db(connection.getDbName()).collection(item.getName()));
         }
         fileTree.put(connection.getDbName(), names);
 
@@ -83,7 +105,6 @@ public class ConnectionService {
             BaseDocument document = cursor.next();
             colData.put(document.getKey(), document.getProperties());
         }
-
         return colData;
     }
 }

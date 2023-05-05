@@ -1,5 +1,6 @@
 package ru.vsu.cs.arandoserver.controller;
 
+import com.arangodb.ArangoCollection;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,10 +38,9 @@ public class ConnectionController {
     public Map<String, Map<String, Object>> doQuarry(@RequestBody Quarry quarry) {
         return service.doQuarryRequest(quarry);
     }
-
     @PostMapping("/st")
-    public Map<String, List<String>> doS(@RequestBody DataConnection connection) {
-        return service.getFileNames(connection);
+    public Map<String, List<ArangoCollection>> doS(@RequestBody DataConnection connection) {
+        return service.getFileNames1(connection);
     }
 
     @PostMapping("/cf")
