@@ -1,7 +1,5 @@
 package vsu.csf.arangodbdecktop.controllers;
 
-import com.arangodb.ArangoCollection;
-import com.arangodb.entity.IndexEntity;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,7 +18,6 @@ import vsu.csf.arangodbdecktop.service.HttpService;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -36,12 +33,17 @@ public class MainController {
     private URL location;
     @FXML
     private AnchorPane left;
+    @FXML
+    private Tab mainT;
 
     @FXML
     private Button deleteButton;
 
     @FXML
     private Button insertButton;
+
+    @FXML
+    private Tab addTab;
 
     @FXML
     private Button findButton;
@@ -55,19 +57,27 @@ public class MainController {
     private Button connectButton;
 
     @FXML
-    private TextArea inputBox;
-
-    @FXML
     private TreeView<String> tree = new TreeView<>(new TreeItem<>());
 
     @FXML
+    private TabPane tabPane;
+    @FXML
     private Button doingButton;
+
+//    @FXML
+//    void doSomething(ActionEvent event) {
+//        System.out.println("hello");
+//    }
 
     @FXML
     private TableView<ResultModel> resTable;
 
     @FXML
     private TreeView<String> collectionTree = new TreeView<>(new TreeItem<>());
+
+    public DataConnection getConnection() {
+        return this.connection;
+    }
 
     public void start(DataConnection connection) {
         HttpService service = new HttpService();
@@ -77,7 +87,7 @@ public class MainController {
         rootNode.setExpanded(true);
         populateTree(data, rootNode);
 
-        this.connection = connection;
+        this.connection = new DataConnection(connection);
 
         this.tree.setRoot(rootNode);
 
@@ -137,18 +147,49 @@ public class MainController {
             for (Object name : entry.getValue()) {
                 TreeItem<String> item1 = new TreeItem<>();
                 TreeItem<String> item2 = new TreeItem<>("indexes");
+                TreeItem<String> item3 = new TreeItem<>("fields");
                 if (name instanceof Map<?, ?> map) {
                     if (map.get("info") instanceof Map<?, ?> map1) {
                         item1.setValue(String.valueOf(map1.get("name")));
                         item1.getChildren().add(item2);
+                        item1.getChildren().add(item3);
                     }
                     if (map.get("indexes") instanceof List<?> list)
                         for (Object i : list)
-                            if (i instanceof Map<?, ?> map1)
+                            if (i instanceof Map<?, ?> map1) {
                                 item2.getChildren().add(new TreeItem<>(
                                         String.valueOf(map1.get("name"))));
+                                if (map1.get("fields") instanceof List<?> fields)
+                                    for (Object field : fields)
+                                        item3.getChildren().add(new TreeItem<>(String.valueOf(field)));
+
+                            }
                     item.getChildren().add(item1);
                 }
+            }
+        }
+    }
+
+
+    @FXML
+    void createNew(MouseEvent event) {
+        if (addTab.isSelected()) {
+            FXMLLoader fxmlLoader = new FXMLLoader(ClientApplication.class.getResource("TabWindow.fxml"));
+            try {
+                fxmlLoader.load();
+            } catch (IOException es) {
+                throw new RuntimeException(es);
+            }
+            TabController d = fxmlLoader.getController();
+            Tab tab = new Tab("Console " + tabPane.getTabs().size());
+            tab.setContent(d.getPane());
+            tabPane.getTabs().add(tabPane.getTabs().size() - 1, tab);
+            tabPane.getSelectionModel().select(tab);
+        } else {
+            if (event.getClickCount() == 2) {
+                tabPane.getTabs().forEach(e -> {
+                    if (e.isSelected()) tabPane.getTabs().remove(e);
+                });
             }
         }
     }
@@ -177,13 +218,13 @@ public class MainController {
 
     @FXML
     void initialize() {
-
         insertButton.setOnAction(e -> {
             inputText.clear();
             inputText.setText("INSERT { \\\"id\\\": @name, \\\"value\\\": @age } INTO @mycollection");
         });
 
         deleteButton.setOnAction(e -> {
+            System.out.println(connection);
             inputText.clear();
             inputText.setText("FOR my IN @mycollection REMOVE my IN @mycollection");
         });
@@ -194,13 +235,14 @@ public class MainController {
         });
 
         doingButton.setOnAction(e -> {
-            outputText.clear();
-            String line = inputText.getText().trim();
+            new Thread(() -> {
+                outputText.clear();
+                String line = inputText.getText().trim();
 
-            HttpService service = new HttpService();
-            showResult(service, line);
-            outputText.setText("Completed successfully!");
-
+                HttpService service = new HttpService();
+                showResult(service, line);
+                outputText.setText("Completed successfully!");
+            }).start();
         });
 
         connectButton.setOnAction(e -> {

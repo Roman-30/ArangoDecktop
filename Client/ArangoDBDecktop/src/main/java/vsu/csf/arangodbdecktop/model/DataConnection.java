@@ -19,6 +19,14 @@ public class DataConnection {
         this.password = password;
     }
 
+    public DataConnection(DataConnection connection) {
+        this.dbName = connection.getDbName();
+        this.host = connection.getHost();
+        this.port = connection.getPort();
+        this.userName = connection.getUserName();
+        this.password = connection.getPassword();
+    }
+
     public DataConnection(String dbName, String host, Integer port, String userName, String password, String collection) {
         this(dbName, host, port, userName, password);
         this.collection = collection;
