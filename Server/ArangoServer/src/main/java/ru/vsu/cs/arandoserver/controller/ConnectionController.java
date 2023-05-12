@@ -21,7 +21,7 @@ public class ConnectionController {
 
     @PostMapping("/create")
     public void createNewTable(@RequestBody DataConnection connection) {
-         service.createTable(connection);
+        service.createTable(connection);
     }
 
     @PostMapping("/delete")
@@ -38,6 +38,7 @@ public class ConnectionController {
     public Map<String, Map<String, Object>> doQuarry(@RequestBody Quarry quarry) {
         return service.doQuarryRequest(quarry);
     }
+
     @PostMapping("/st")
     public Map<String, List<ArangoCollection>> doS(@RequestBody DataConnection connection) {
         return service.getFileNames1(connection);
@@ -48,5 +49,8 @@ public class ConnectionController {
         return service.getCollectionData(connection);
     }
 
-
+    @PostMapping("/create/coollection")
+    public void createCollection(DataConnection connection) {
+        service.crateCollection(connection);
+    }
 }

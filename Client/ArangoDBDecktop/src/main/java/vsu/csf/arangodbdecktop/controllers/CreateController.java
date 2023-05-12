@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import vsu.csf.arangodbdecktop.ClientApplication;
 import vsu.csf.arangodbdecktop.model.DataConnection;
+import vsu.csf.arangodbdecktop.model.QueryPatterns;
 import vsu.csf.arangodbdecktop.service.FileService;
 import vsu.csf.arangodbdecktop.service.HttpService;
 
@@ -64,10 +65,10 @@ public class CreateController {
 
             DataConnection data = new DataConnection(dbName, host, Integer.parseInt(port), user, password); // создание экземпляра класса DataConnectionDto с нужными значениями
 
-            List<DataConnection> old = FileService.readConnection();
+            List<DataConnection> old = FileService.readConnection(QueryPatterns.ALL_DATA_BASE_PASS);
             old.add(data);
 
-            FileService.writeConnection(old);
+            FileService.writeConnection(old, QueryPatterns.ALL_DATA_BASE_PASS);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Message");
@@ -87,7 +88,7 @@ public class CreateController {
             HttpService service = new HttpService();
 
             int statusCode = service.createDb(data);
-            System.out.println(statusCode);
+
             Alert alert;
             if (statusCode >= 200 && statusCode < 300) {
                 alert = new Alert(Alert.AlertType.INFORMATION);

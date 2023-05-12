@@ -107,4 +107,10 @@ public class ConnectionService {
         }
         return colData;
     }
+
+    public void crateCollection(DataConnection connection) {
+        ArangoConnection arando = new ArangoConnection();
+        arando.getArangoDB().db(connection.getDbName())
+                .createCollection(connection.getCollection());
+    }
 }

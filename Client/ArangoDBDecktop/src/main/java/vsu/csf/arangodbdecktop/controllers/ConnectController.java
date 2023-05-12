@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import vsu.csf.arangodbdecktop.ClientApplication;
 import vsu.csf.arangodbdecktop.model.DataConnection;
+import vsu.csf.arangodbdecktop.model.QueryPatterns;
 import vsu.csf.arangodbdecktop.service.FileService;
 import vsu.csf.arangodbdecktop.service.HttpService;
 
@@ -60,9 +61,9 @@ public class ConnectController {
     private TableView<DataConnection> table;
 
     private void deleteData(DataConnection data) {
-        List<DataConnection> dataConnections = FileService.readConnection();
+        List<DataConnection> dataConnections = FileService.readConnection(QueryPatterns.ALL_DATA_BASE_PASS);
         dataConnections.remove(data);
-        FileService.writeConnection(dataConnections);
+        FileService.writeConnection(dataConnections, QueryPatterns.ALL_DATA_BASE_PASS);
     }
 
     private void create() {
@@ -106,6 +107,8 @@ public class ConnectController {
                 ex.printStackTrace();
             }
 
+            FileService.writeConnection(List.of(data), QueryPatterns.CURRENT_DATA_BASE_PASS);
+
             MainController sd = loader.getController();
             sd.start(data);
             Parent root = loader.getRoot();
@@ -120,7 +123,7 @@ public class ConnectController {
     void initialize() {
         create();
 
-        connections = FileService.readConnection();
+        connections = FileService.readConnection(QueryPatterns.ALL_DATA_BASE_PASS);
         table.getItems().addAll(connections);
 
 

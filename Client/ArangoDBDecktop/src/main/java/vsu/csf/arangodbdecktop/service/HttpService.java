@@ -362,4 +362,34 @@ public class HttpService {
         return list;
     }
 
+    public int createCollection(DataConnection data) {
+        Gson gson = new GsonBuilder().registerTypeAdapter(DataConnection.class, new DataConnectionAdapter()).create();
+        String json = gson.toJson(data);
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpPost post = new HttpPost(SERVER_URL + "/create/Collection");
+
+        post.setHeader("Content-type", "application/json");
+
+        StringEntity entity;
+
+        try {
+            entity = new StringEntity(json);
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        post.setEntity(entity);
+
+        HttpResponse response;
+
+        try {
+            response = client.execute(post);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        return response.getStatusLine().getStatusCode();
+    }
+
 }

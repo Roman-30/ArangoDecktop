@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import vsu.csf.arangodbdecktop.ClientApplication;
 import vsu.csf.arangodbdecktop.model.DataConnection;
+import vsu.csf.arangodbdecktop.model.QueryPatterns;
 import vsu.csf.arangodbdecktop.service.FileService;
 
 import java.io.IOException;
@@ -92,11 +93,11 @@ public class EditController {
 
                 DataConnection data = new DataConnection(dbName, host, Integer.parseInt(port), user, password);
 
-                List<DataConnection> connections = FileService.readConnection();
+                List<DataConnection> connections = FileService.readConnection(QueryPatterns.ALL_DATA_BASE_PASS);
                 connections.remove(old);
                 connections.add(data);
 
-                FileService.writeConnection(connections);
+                FileService.writeConnection(connections, QueryPatterns.ALL_DATA_BASE_PASS);
 
                 saveButton.getScene().getWindow().hide();
                 reloadWindow("ConnectWindow.fxml");

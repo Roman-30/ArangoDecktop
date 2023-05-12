@@ -60,6 +60,8 @@ public class MainController {
     private TreeView<String> tree = new TreeView<>(new TreeItem<>());
 
     @FXML
+    private Button crColllectionButton;
+    @FXML
     private TabPane tabPane;
     @FXML
     private Button doingButton;
@@ -223,8 +225,22 @@ public class MainController {
             inputText.setText("INSERT { \\\"id\\\": @name, \\\"value\\\": @age } INTO @mycollection");
         });
 
+        crColllectionButton.setOnAction(e -> {
+            int statusCode = 200;
+            Alert alert;
+            if (statusCode >= 200 && statusCode < 300) {
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Message");
+                alert.setHeaderText("Create is successful!");
+            } else {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message");
+                alert.setHeaderText("Create error!");
+            }
+            alert.showAndWait();
+        });
+
         deleteButton.setOnAction(e -> {
-            System.out.println(connection);
             inputText.clear();
             inputText.setText("FOR my IN @mycollection REMOVE my IN @mycollection");
         });

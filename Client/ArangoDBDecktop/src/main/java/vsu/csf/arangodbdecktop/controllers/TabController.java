@@ -2,28 +2,32 @@ package vsu.csf.arangodbdecktop.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 import vsu.csf.arangodbdecktop.ClientApplication;
 import vsu.csf.arangodbdecktop.model.DataConnection;
 import vsu.csf.arangodbdecktop.model.Quarry;
+import vsu.csf.arangodbdecktop.model.QueryPatterns;
 import vsu.csf.arangodbdecktop.model.ResultModel;
+import vsu.csf.arangodbdecktop.service.FileService;
 import vsu.csf.arangodbdecktop.service.HttpService;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
-import java.util.Random;
 import java.util.ResourceBundle;
 
 public class TabController {
-    private DataConnection connection = new DataConnection(
-            "tes1","localhost",8529,"root","12345"
-    );
+//    private DataConnection connection = new DataConnection(
+//            "tes1","localhost",8529,"root","12345"
+//    );
+
+    private DataConnection connection = FileService.
+            readConnection(QueryPatterns.CURRENT_DATA_BASE_PASS).get(0);
     @FXML
     private ResourceBundle resources;
 

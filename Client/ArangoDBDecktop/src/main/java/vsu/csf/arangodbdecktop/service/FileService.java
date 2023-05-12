@@ -7,10 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileService {
-    private static final String FILE_PATH = "C:\\Users\\romse\\OneDrive\\Документы\\GitHub\\ArangoDecktop\\Client\\ArangoDBDecktop\\src\\main\\java\\vsu\\csf\\arangodbdecktop\\file\\connection_data.txt";
 
-    public static void writeConnection(List<DataConnection> dataConnections) {
-        try (FileWriter writer = new FileWriter(FILE_PATH)) {
+    public static void writeConnection(List<DataConnection> dataConnections, String path) {
+        try (FileWriter writer = new FileWriter(path)) {
             writer.write("Database Name, Host, Port, User Name, Password"+"\n");
 
             for (DataConnection dataConnection : dataConnections) {
@@ -27,10 +26,10 @@ public class FileService {
         }
     }
 
-    public static List<DataConnection> readConnection() {
+    public static List<DataConnection> readConnection(String path) {
         List<DataConnection> dataConnections = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             String line = reader.readLine();
             while ((line = reader.readLine()) != null) {
                 String[] tokens = line.split(",");
