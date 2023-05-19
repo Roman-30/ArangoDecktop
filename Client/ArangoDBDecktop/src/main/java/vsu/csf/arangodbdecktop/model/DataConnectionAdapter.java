@@ -1,4 +1,4 @@
-package vsu.csf.arangodbdecktop.model.adapter;
+package vsu.csf.arangodbdecktop.model;
 
 import com.google.bigtable.repackaged.com.google.gson.TypeAdapter;
 import com.google.bigtable.repackaged.com.google.gson.stream.JsonReader;

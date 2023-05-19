@@ -1,4 +1,4 @@
-package vsu.csf.arangodbdecktop.controllers;
+package vsu.csf.arangodbdecktop.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,23 +11,19 @@ import javafx.scene.layout.AnchorPane;
 import vsu.csf.arangodbdecktop.ClientApplication;
 import vsu.csf.arangodbdecktop.model.DataConnection;
 import vsu.csf.arangodbdecktop.model.Quarry;
-import vsu.csf.arangodbdecktop.model.QueryPatterns;
 import vsu.csf.arangodbdecktop.model.ResultModel;
 import vsu.csf.arangodbdecktop.service.FileService;
 import vsu.csf.arangodbdecktop.service.HttpService;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 public class TabController {
-//    private DataConnection connection = new DataConnection(
-//            "tes1","localhost",8529,"root","12345"
-//    );
-
     private DataConnection connection = FileService.
-            readConnection(QueryPatterns.CURRENT_DATA_BASE_PASS).get(0);
+            readConnection(FileService.CURRENT_DATA_BASE_PASS).get(0);
     @FXML
     private ResourceBundle resources;
 
@@ -64,28 +60,47 @@ public class TabController {
     }
 
     private void showResult(HttpService service, String queryRequest) {
-        Map<String, Map<String, Object>> data = service.doingQuarry(
+        List<?> data = service.doingQuarry(
                 new Quarry(this.connection, queryRequest));
 
+        if (data.get(0) instanceof Map<?, ?> map) {
+            System.out.println(map);
 
-        this.resTable.getColumns().clear();
-        this.resTable.getItems().clear();
+            this.resTable.getColumns().clear();
+            this.resTable.getItems().clear();
 
-        if (data.size() != 0) {
             TableColumn<ResultModel, Object> argv1 = new TableColumn<>();
             TableColumn<ResultModel, Object> argv2 = new TableColumn<>();
             argv1.setCellValueFactory(new PropertyValueFactory<>("argv1"));
+            argv1.setText("Key");
             argv2.setCellValueFactory(new PropertyValueFactory<>("argv2"));
+            argv2.setText("Value");
             this.resTable.getColumns().add(argv1);
             this.resTable.getColumns().add(argv2);
 
-            for (Map.Entry<String, Map<String, Object>> entry : data.entrySet()) {
-                for (Map.Entry<String, Object> item : entry.getValue().entrySet()) {
-                    this.resTable.getItems().add(new ResultModel(item.getKey(), item.getValue()));
+            for (Object datum : data) {
+                if (datum instanceof Map<?, ?> map1) {
+                    for (Map.Entry<?, ?> item : map1.entrySet()) {
+                        this.resTable.getItems().add(new ResultModel(item.getKey(), item.getValue()));
+                    }
+                    this.resTable.getItems().add(new ResultModel("---", "---"));
                 }
             }
-        }
 
+
+        } else {
+            this.resTable.getColumns().clear();
+            this.resTable.getItems().clear();
+            TableColumn<ResultModel, Object> argv2 = new TableColumn<>();
+            argv2.setCellValueFactory(new PropertyValueFactory<>("argv2"));
+            argv2.setText("Value");
+            this.resTable.getColumns().add(argv2);
+
+            for (Object datum : data) {
+                this.resTable.getItems().add(new ResultModel(null, datum));
+            }
+
+        }
         outputText.clear();
     }
 
@@ -97,7 +112,7 @@ public class TabController {
             throw new RuntimeException(es);
         }
         MainController d = fxmlLoader.getController();
-        System.out.println("HIIIIIIIIIIIIIII");
+
         this.connection = new DataConnection(d.getConnection());
     }
     @FXML

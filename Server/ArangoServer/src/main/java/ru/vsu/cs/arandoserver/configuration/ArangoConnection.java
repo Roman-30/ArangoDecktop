@@ -1,7 +1,9 @@
 package ru.vsu.cs.arandoserver.configuration;
 
+import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDBException;
+import com.arangodb.ArangoDatabase;
 import com.arangodb.entity.CollectionEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +18,9 @@ import java.util.List;
 @Setter
 public class ArangoConnection {
 
-    private ArangoDB arangoDB;
+    public ArangoDB arangoDB;
+    public static ArangoDatabase db;
+    public static ArangoCollection collection;
 
     public ArangoConnection(String host, int port, String username, String password) {
         this.arangoDB = new ArangoDB.Builder()
@@ -34,5 +38,22 @@ public class ArangoConnection {
                 .build();
     }
 
+    public static ArangoDatabase getDatabase(DataConnection data) {
+        if (db == null) {
+            db = new ArangoConnection(data).getArangoDB().db(data.getDbName());
+        }
+        return db;
+    }
+
+    public static ArangoCollection getCollection(DataConnection data) {
+        if (collection == null) {
+            collection = getDatabase(data).collection(data.getCollection());
+        }
+        return collection;
+    }
+
+    public void close() {
+        this.arangoDB.shutdown();
+    }
 }
 

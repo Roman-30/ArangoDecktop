@@ -1,19 +1,13 @@
-package vsu.csf.arangodbdecktop.controllers;
+package vsu.csf.arangodbdecktop.controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import vsu.csf.arangodbdecktop.ClientApplication;
 import vsu.csf.arangodbdecktop.model.DataConnection;
-import vsu.csf.arangodbdecktop.model.QueryPatterns;
 import vsu.csf.arangodbdecktop.service.FileService;
+import vsu.csf.arangodbdecktop.util.WindowUtils;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -53,23 +47,6 @@ public class EditController {
         this.old = data;
     }
 
-    private void reloadWindow(String window) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(ClientApplication.class.getResource(window));
-
-        try {
-            loader.load();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        Parent root = loader.getRoot();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.setResizable(false);
-        stage.show();
-    }
-
     public void setValue(DataConnection data) {
         if (data != null) {
             this.hostField.setText(data.getHost());
@@ -93,14 +70,14 @@ public class EditController {
 
                 DataConnection data = new DataConnection(dbName, host, Integer.parseInt(port), user, password);
 
-                List<DataConnection> connections = FileService.readConnection(QueryPatterns.ALL_DATA_BASE_PASS);
+                List<DataConnection> connections = FileService.readConnection(FileService.ALL_DATA_BASE_PASS);
                 connections.remove(old);
                 connections.add(data);
 
-                FileService.writeConnection(connections, QueryPatterns.ALL_DATA_BASE_PASS);
+                FileService.writeConnection(connections, FileService.ALL_DATA_BASE_PASS);
 
                 saveButton.getScene().getWindow().hide();
-                reloadWindow("ConnectWindow.fxml");
+                WindowUtils.loadWindow("ConnectWindow.fxml", false);
 
             } catch (Exception ex) {
                 ex.fillInStackTrace();
@@ -113,7 +90,7 @@ public class EditController {
 
         canselButton.setOnAction(e -> {
             canselButton.getScene().getWindow().hide();
-            reloadWindow("ConnectWindow.fxml");
+            WindowUtils.loadWindow("ConnectWindow.fxml", false);
         });
     }
 }

@@ -85,8 +85,9 @@ public class DataConnection {
 
     @Override
     public String toString() {
-        return String.format("\"dbName\":\"%s\",\"host\":\"%s\",\"port\":\"%s\",\"userName\":\"%s\",\"password\":\"%s\"",
-                this.dbName, this.host, this.port, this.userName, this.password
+        return String.format("\"dbName\":\"%s\",\"host\":\"%s\",\"port\":\"%s\",\"userName\":\"%s\",\"password\":\"%s\", " +
+                        "\"collection\":\"%s\"",
+                this.dbName, this.host, this.port, this.userName, this.password, this.collection
         );
     }
 

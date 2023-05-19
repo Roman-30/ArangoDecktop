@@ -1,4 +1,4 @@
-package vsu.csf.arangodbdecktop.controllers;
+package vsu.csf.arangodbdecktop.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,9 +10,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import vsu.csf.arangodbdecktop.ClientApplication;
 import vsu.csf.arangodbdecktop.model.DataConnection;
-import vsu.csf.arangodbdecktop.model.QueryPatterns;
 import vsu.csf.arangodbdecktop.service.FileService;
 import vsu.csf.arangodbdecktop.service.HttpService;
+import vsu.csf.arangodbdecktop.util.WindowUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -61,9 +61,9 @@ public class ConnectController {
     private TableView<DataConnection> table;
 
     private void deleteData(DataConnection data) {
-        List<DataConnection> dataConnections = FileService.readConnection(QueryPatterns.ALL_DATA_BASE_PASS);
+        List<DataConnection> dataConnections = FileService.readConnection(FileService.ALL_DATA_BASE_PASS);
         dataConnections.remove(data);
-        FileService.writeConnection(dataConnections, QueryPatterns.ALL_DATA_BASE_PASS);
+        FileService.writeConnection(dataConnections, FileService.ALL_DATA_BASE_PASS);
     }
 
     private void create() {
@@ -75,26 +75,9 @@ public class ConnectController {
 
     }
 
-    private void reloadWindow(String window) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(ClientApplication.class.getResource(window));
-
-        try {
-            loader.load();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        Parent root = loader.getRoot();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.show();
-    }
-
     public void selectContractContractTab(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() == 2) {
             var data = table.getSelectionModel().getSelectedItem();
-            System.out.println(data);
 
             canselButton.getScene().getWindow().hide();
 
@@ -107,10 +90,10 @@ public class ConnectController {
                 ex.printStackTrace();
             }
 
-            FileService.writeConnection(List.of(data), QueryPatterns.CURRENT_DATA_BASE_PASS);
+            FileService.writeConnection(List.of(data), FileService.CURRENT_DATA_BASE_PASS);
 
             MainController sd = loader.getController();
-            sd.start(data);
+            sd.createDbFilesTree(data);
             Parent root = loader.getRoot();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
@@ -123,30 +106,27 @@ public class ConnectController {
     void initialize() {
         create();
 
-        connections = FileService.readConnection(QueryPatterns.ALL_DATA_BASE_PASS);
+        connections = FileService.readConnection(FileService.ALL_DATA_BASE_PASS);
         table.getItems().addAll(connections);
-
 
         removeButton.setOnAction(e -> {
             DataConnection selectedData = table.getSelectionModel().getSelectedItem();
             HttpService service = new HttpService();
 
             int statusCode = service.deleteDb(selectedData);
-            System.out.println(statusCode);
             Alert alert;
             if (statusCode >= 200 && statusCode < 300) {
                 deleteData(selectedData);
                 alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Message");
                 alert.setHeaderText("Deleted is successful!");
             } else {
                 alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Message");
                 alert.setHeaderText("Deleted is error!");
             }
+            alert.setTitle("Message");
             alert.showAndWait();
             removeButton.getScene().getWindow().hide();
-            reloadWindow("ConnectWindow.fxml");
+            WindowUtils.loadWindow("ConnectWindow.fxml", false);
         });
 
         testButton.setOnAction(e -> {
@@ -154,17 +134,15 @@ public class ConnectController {
             HttpService service = new HttpService();
 
             int statusCode = service.checkConnectionDb(selectedData);
-            System.out.println(statusCode);
             Alert alert;
             if (statusCode >= 200 && statusCode < 300) {
                 alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Message");
                 alert.setHeaderText("Connected is successful!");
             } else {
                 alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Message");
                 alert.setHeaderText("Connected is error!");
             }
+            alert.setTitle("Message");
             alert.showAndWait();
 
         });
@@ -172,6 +150,7 @@ public class ConnectController {
         editButton.setOnAction(e -> {
             editButton.getScene().getWindow().hide();
             DataConnection selectedData = table.getSelectionModel().getSelectedItem();
+
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(ClientApplication.class.getResource("EditWindow.fxml"));
 
@@ -197,38 +176,12 @@ public class ConnectController {
 
         createButton.setOnAction(e -> {
             createButton.getScene().getWindow().hide();
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(ClientApplication.class.getResource("CreateWindow.fxml"));
-
-            try {
-                loader.load();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-            Parent root = loader.getRoot();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.show();
+            WindowUtils.loadWindow("CreateWindow.fxml", false);
         });
 
         canselButton.setOnAction(e -> {
             canselButton.getScene().getWindow().hide();
-
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(ClientApplication.class.getResource("ArangoDBConstructor.fxml"));
-
-            try {
-                loader.load();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-            Parent root = loader.getRoot();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-
-            stage.show();
+            WindowUtils.loadWindow("ArangoDBConstructor.fxml", false);
         });
     }
 

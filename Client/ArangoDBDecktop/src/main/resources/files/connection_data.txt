@@ -1,0 +1,3 @@
+Database Name, Host, Port, User Name, Password
+test,localhost,8529,root,12345
+weather,localhost,8523,root,1234

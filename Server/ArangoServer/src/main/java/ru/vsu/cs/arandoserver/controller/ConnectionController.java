@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.vsu.cs.arandoserver.entity.DataConnection;
-import ru.vsu.cs.arandoserver.entity.Quarry;
+import ru.vsu.cs.arandoserver.entity.Query;
 import ru.vsu.cs.arandoserver.service.ConnectionService;
 
 import java.util.List;
@@ -19,38 +19,42 @@ public class ConnectionController {
         this.service = service;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/database/create")
     public void createNewTable(@RequestBody DataConnection connection) {
         service.createTable(connection);
     }
 
-    @PostMapping("/delete")
+    @PostMapping("/database/delete")
     public void dropTable(@RequestBody DataConnection connection) {
         service.dropTable(connection);
     }
 
-    @PostMapping("/check")
+    @PostMapping("/database/check")
     public void checkConnectionTable(@RequestBody DataConnection connection) {
         service.testConnection(connection);
     }
 
     @PostMapping("/quarry")
-    public Map<String, Map<String, Object>> doQuarry(@RequestBody Quarry quarry) {
-        return service.doQuarryRequest(quarry);
+    public List<Object> doQuarry(@RequestBody Query query) {
+        return service.doQuery(query);
     }
 
-    @PostMapping("/st")
-    public Map<String, List<ArangoCollection>> doS(@RequestBody DataConnection connection) {
-        return service.getFileNames1(connection);
+    @PostMapping("/database/files")
+    public Map<String, List<ArangoCollection>> getDbFiles(@RequestBody DataConnection connection) {
+        return service.getFileNames(connection);
     }
 
-    @PostMapping("/cf")
-    public Map<String, Map<String, Object>> doSs(@RequestBody DataConnection connection) {
+    @PostMapping("/collection/files")
+    public Map<String, Map<String, Object>> getCollectionFiles(@RequestBody DataConnection connection) {
         return service.getCollectionData(connection);
     }
 
-    @PostMapping("/create/coollection")
-    public void createCollection(DataConnection connection) {
-        service.crateCollection(connection);
+    @PostMapping("/collection/create")
+    public void createCollection(@RequestBody DataConnection connection) {
+        service.createCollection(connection);
+    }
+    @PostMapping("/collection/delete")
+    public void deleteCollection(@RequestBody DataConnection connection) {
+        service.deleteCollection(connection);
     }
 }
